@@ -93,7 +93,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
 
                     <li class="menu-item <?= $currentFilename === "dashboard.php" ? 'active' : '' ?> " >
                         <a href="<?= url('views/admin/dashboard.php') ?>" class="menu-link" >
-                            <i class="menu-icon tf-icons bx bx-home-circle" ></i>
+                            <i class="menu-icon tf-icons bx bx-library" ></i>
                             <div data-i18n="appointments">Dashboard</div>
                         </a>
                     </li>
@@ -108,10 +108,10 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                         </li>
                     <?php endif; ?>
 
-                    <li class="menu-item <?= $currentFilename === "appointments.php" ? 'active' : '' ?> ">
-                        <a href="<?= url('views/admin/appointments.php') ?>" class="menu-link">
-                            <i class="menu-icon tf-icons  bx bx-collection"></i>
-                            <div data-i18n="Analytics">Appointments</div>
+                    <li class="menu-item <?= $currentFilename === "books.php" ? 'active' : '' ?> ">
+                        <a href="<?= url('views/admin/books.php') ?>" class="menu-link">
+                            <i class="menu-icon tf-icons  bx bx-book"></i>
+                            <div data-i18n="Analytics">Book-collection</div>
                         </a>
                     </li>
                     <?php if ($role == 'admin') : ?>

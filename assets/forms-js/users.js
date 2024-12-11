@@ -1,35 +1,6 @@
 
 $(document).ready(function () {
-    // Trigger change event on page load if doctor permission is selected by default
-    if ($('#permission, #edit_permission').val() === 'doctor') {
-        $('#permission, #edit_permission').trigger('change');
-    }
-
-    $('#permission').change(function () {
-        var permission = $(this).val();
-        if (permission === 'doctor') {
-            $('#additional-fields').html(
-                '<div class="row mt-2">' +
-                '<div class="col-12 mb-3">' +
-                '<label for="name" class="form-label">Doctor Name</label>' +
-                '<input type="text" id="name" name="doctor_name" class="form-control" placeholder="Enter Name" required />' +
-                '</div>' +
-                '<div class="col-12 mb-3">' +
-                '<label for="about" class="form-label">About Doctor</label>' +
-                '<textarea id="about" name="about_doctor" class="form-control" placeholder="Enter About" required></textarea>' +
-                '</div>' +
-                '<div class="col-12 mb-3">' +
-                '<label for="formFile" class="form-label">Doctor Photo</label>' +
-                '<input class="form-control" name="image" id="image" type="file" accept="image/*">' +
-                '</div>' +
-                '</div>'
-            );
-        } else {
-            $('#additional-fields').empty();
-        }
-    });
-
-    function validatePasswords(class1, class2) {
+   function validatePasswords(class1, class2) {
         if ($('#' + class1).val() === $('#' + class2).val()) {
             return true;
         } else {
@@ -91,9 +62,8 @@ $(document).ready(function () {
 
     $('.delete-user-btn').on('click', async function () {
         var user_id = $(this).data('id');
-        var permission = $(this).data('permission');
         var is_confirm = confirm('Are you sure,Do you want to delete?');
-        if (is_confirm) await deleteById(user_id, permission);
+        if (is_confirm) await deleteById(user_id);
     })
 
     $('#update-user').on('click', function () {
@@ -191,7 +161,7 @@ async function getUserById(id) {
 }
 
 
-async function deleteById(id, permission) {
+async function deleteById(id) {
     var url = $('#update-form').attr('action');
 
     // Perform AJAX request
@@ -201,7 +171,6 @@ async function deleteById(id, permission) {
         data: {
             user_id: id,
             action: 'delete_user',
-            permission: permission
         }, // Form data
         dataType: 'json',
         success: function (response) {

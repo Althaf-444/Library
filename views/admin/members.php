@@ -60,7 +60,7 @@ if ($role != 'admin') dd('Access Denied...!');
                                         <div class="dropdown-menu">
 
                                         <a class="dropdown-item edit-user-btn" data-bs-toggle="modal" data-bs-target="#edit-user-modal" data-id="<?= $member['id']; ?>"><i class="bx bx-edit-alt me-1"></i>Edit</a>
-                                            <a class="dropdown-item delete-user-btn" data-role="<?= $member['role']; ?>" data-id="<?= $member['id']; ?>"><i class="bx bx-trash me-1"></i> Delete</a>
+                                            <a class="dropdown-item delete-user-btn" data-id="<?= $member['id']; ?>"><i class="bx bx-trash me-1"></i> Delete</a>
 
                                         </div>
                                     </div>

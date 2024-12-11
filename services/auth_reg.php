@@ -17,7 +17,7 @@ if (empty($email) || empty($password) || empty($username)) {
 }
  else {
     $param = array(':username' => $username,':email' => $email,':password' => $password);
-    $add_member= $pm->insertAndGetLastRowId("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)", $param, true);
+    $add_member= $pm->insertAndGetLastRowId("INSERT INTO members (username, email, password) VALUES (:username, :email, :password)", $param, true);
     if($add_member){
             $sm->setAttribute("userId",$add_member); //$add_member return the insert data last id
             $sm->setAttribute("username", $username);

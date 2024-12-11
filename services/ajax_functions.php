@@ -2,7 +2,7 @@
 require_once '../config.php';
 require_once '../helpers/AppManager.php';
 require_once '../models/Members.php';
-require_once '../models/Doctor.php';
+require_once '../models/Books.php';
 require_once '../models/Appointment.php';
 require_once '../models/Payment.php';
 require_once '../models/Treatment.php';
@@ -71,14 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id']) && isset($_G
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GET['action']) && $_GET['action'] == 'delete_user') {
     try {
         $user_id = $_GET['user_id'];
-        $role = $_GET['role'];
 
         $memberModel = new Members();
-        $doctorModel = new Doctor();
-
-        // Check role and delete doctor if necessary
-        
-
         // Proceed to delete the Members if doctor deletion was successful or not needed
         $userDeleted = $memberModel->deleteMembers($user_id);
 

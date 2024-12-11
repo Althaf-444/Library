@@ -1,9 +1,6 @@
 <?php
 
-/**
- * Project Name: Tooth Care - Channeling Appoinments
- * Author: Musab Ibn Siraj
- */
+
 
 class SessionManager
 {
