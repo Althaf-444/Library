@@ -23,7 +23,7 @@ class PersistanceManager
     public function createTables()
     {
         // Users table (admin and members)
-        $query_users = "CREATE TABLE IF NOT EXISTS `users` (
+        $query_users = "CREATE TABLE IF NOT EXISTS `members` (
             `id` INT AUTO_INCREMENT PRIMARY KEY,
             `username` VARCHAR(200) NOT NULL UNIQUE,
             `email` VARCHAR(200) NOT NULL UNIQUE,
@@ -48,15 +48,16 @@ class PersistanceManager
         $this->pdo->exec($query_books);
 
         // Borrowed books table
-        $query_borrowed_books = "CREATE TABLE IF NOT EXISTS `borrowed_books` (
+        $query_borrowed_books = "CREATE TABLE IF NOT EXISTS `borrowedbooks` (
             `id` INT AUTO_INCREMENT PRIMARY KEY,
             `user_id` INT NOT NULL,
             `book_id` INT NOT NULL,
+            `book_status` ENUM('borrowed', 'returned', 'due time over') NOT NULL,
             `borrowed_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             `due_date` DATE NOT NULL,
             `returned_at` TIMESTAMP NULL,
             `fine` DECIMAL(10, 2) DEFAULT 0.00,
-            FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+            FOREIGN KEY (`user_id`) REFERENCES `members`(`id`) ON DELETE CASCADE,
             FOREIGN KEY (`book_id`) REFERENCES `books`(`id`) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
         $this->pdo->exec($query_borrowed_books);

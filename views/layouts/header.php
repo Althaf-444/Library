@@ -79,7 +79,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                         <span class="app-brand-logo demo">
 
                         </span>
-                        <span class="app-brand-text demo menu-text fw-bolder ms-2 text-capitalize">E-Library</span>
+                        <span class="app-brand-text demo menu-text fw-bolder ms-2 text-capitalize text-dark">E-Library</span>
                     </a>
 
                     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -93,8 +93,8 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
 
                     <li class="menu-item <?= $currentFilename === "dashboard.php" ? 'active' : '' ?> " >
                         <a href="<?= url('views/admin/dashboard.php') ?>" class="menu-link" >
-                            <i class="menu-icon tf-icons bx bx-library" ></i>
-                            <div data-i18n="appointments">Dashboard</div>
+                            <i class="menu-icon tf-icons bx bx-library btn-outline-dark" ></i>
+                            <div data-i18n="appointments" class=" text-dark">Dashboard</div>
                         </a>
                     </li>
 
@@ -102,55 +102,27 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                     <?php if ($role == 'admin') : ?>
                         <li class="menu-item <?= $currentFilename === "members.php" ? 'active' : '' ?>">
                             <a href="<?= url('views/admin/members.php') ?>" class="menu-link" >
-                                <i class="menu-icon tf-icons bx bx-body"></i>
-                                <div data-i18n="Analytics">Members</div>
+                                <i class="menu-icon tf-icons bx bx-body btn-outline-dark"></i>
+                                <div data-i18n="Analytics" class=" text-dark">Members</div>
                             </a>
                         </li>
                     <?php endif; ?>
-
                     <li class="menu-item <?= $currentFilename === "books.php" ? 'active' : '' ?> ">
                         <a href="<?= url('views/admin/books.php') ?>" class="menu-link">
-                            <i class="menu-icon tf-icons  bx bx-book"></i>
-                            <div data-i18n="Analytics">Book-collection</div>
+                            <i class="menu-icon tf-icons  bx bx-book btn-outline-dark"></i>
+                            <div data-i18n="Analytics" class=" text-dark">Book-collection</div>
                         </a>
                     </li>
-                    <?php if ($role == 'admin') : ?>
-                        <li class="menu-item <?= $currentFilename === "doctors.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/doctors.php') ?>" class="menu-link">
-                                <i class="menu-icon tf-icons  bx bx-plus-medical"></i>
-                                <div data-i18n="Analytics">Doctors</div>
+                    <?php if (isset($role) ) : ?>
+                    
+                        <li class="menu-item  <?= $currentFilename === "borrowed_books.php" ? 'active' : '' ?> ">
+                            <a href="<?= url('views/admin/borrowed_books.php') ?>" class="menu-link">
+                                <i class="menu-icon tf-icons  bx bx-bookmark btn-outline-dark"></i>
+                                <div data-i18n="Analytics" class=" text-dark">Borrowed Books</div>
                             </a>
                         </li>
-
-                        <li class="menu-item <?= $currentFilename === "treatments.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/treatments.php') ?>" class="menu-link">
-                                <i class="menu-icon tf-icons  bx bx-dna"></i>
-                                <div data-i18n="Analytics">Treatments</div>
-                            </a>
-                        </li>
-
-                        <li class="menu-item <?= $currentFilename === "doctor_availabilities.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/doctor_availabilities.php') ?>" class="menu-link">
-                                <i class="menu-icon tf-icons  bx bx-dna"></i>
-                                <div data-i18n="Analytics">Doctor Availabilities</div>
-                            </a>
-                        </li>
-
-                        <li class="menu-item <?= $currentFilename === "payments.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/payments.php') ?>" class="menu-link">
-                                <i class="menu-icon tf-icons  bx bx-wallet"></i>
-                                <div data-i18n="Analytics">Payments</div>
-                            </a>
-                        </li>
-
-                        <li class="menu-item <?= $currentFilename === "users.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/users.php') ?>" class="menu-link">
-                                <i class="menu-icon tf-icons  bx bx-user"></i>
-                                <div data-i18n="Analytics">Users</div>
-                            </a>
-                        </li>
-                        
                     <?php endif; ?>
+                        
                 </ul>
             </aside>
             <!-- / Menu -->
@@ -204,6 +176,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                                     </li>
 
                                     <li>
+                                    <?php if (isset($role)) : ?>
                                         <a class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             <i class="bx bx-power-off me-2"></i>
                                             <span class="align-middle">
@@ -213,6 +186,19 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
 
                                             </form>
                                         </a>
+                                    <?php else: ?>
+
+                                        <a class="dropdown-item" onclick="event.preventDefault(); document.getElementById('login-form').submit();">
+                                            <i class="bx bx-power-off me-2"></i>
+                                            <span class="align-middle">
+                                                Login
+                                            </span>
+                                            <form id="login-form" action="<?= url('views/auth/login.php') ?>" method="POST" class="d-none">
+
+                                            </form>
+                                        </a>
+                                    <?php endif; ?>
+
                                     </li>
 
                                 </ul>

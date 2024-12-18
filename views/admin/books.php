@@ -16,23 +16,40 @@ $data = $booksModel->getAll();
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> Book-collection
         <!-- Button trigger modal -->
         <?php if ($role == 'admin') : ?>
-            <button type="button" class="btn btn-info float-end" data-bs-toggle="modal" data-bs-target="#modalCenter">
+            <button type="button" class="btn btn-dark float-end" data-bs-toggle="modal" data-bs-target="#modalCenter">
                 Add New Books
             </button>
         <?php endif; ?>
     </h4>
-
+    <div class="row m-3">
+        <div class="col-6">
+            <div class="d-flex align-items-center m-3">
+                <i class="bx bx-search  btn btn-outline-dark"></i>
+                <input type="text" id="searchInput" class="form-control border-0 shadow-none" placeholder="Search Book Name and Book ID " aria-label="Search..."  />
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group my-3">
+                <button class="btn btn-outline-dark d-inline" id="clear">Clear</button>
+            </div>
+        </div>
+    </div>
+    <hr>
     <!-- Basic Bootstrap Table -->
     <div class="card-body p-0 table-responsive">
         <table class="table table-striped mb-4">
             <thead>
                 <tr>
-                <?php if ($role == 'admin') : ?>
-                    <th>Edit</th>
+                    <?php if ($role == 'admin') : ?>
+                        <th>Edit</th>
                     <?php endif; ?>
                     <th>Image</th>
                     <th>Title</th>
                     <th>Author</th>
+                    <?php if ($role == 'admin') : ?>
+                    <th>ID</th>
+                    <?php endif; ?>
+
                     <th>Category</th>
                     <th>Isbn</th>
                     <th>Quantity</th>
@@ -44,22 +61,25 @@ $data = $booksModel->getAll();
                 foreach ($data as $key => $book) {
                 ?>
                     <tr>
-                    <?php if ($role == 'admin') : ?>
-                        <td>
-                            <div>
-                                <a class="btn btn-sm  btn-outline-info m-2" data-bs-toggle="modal" data-bs-target="#edit-user-modal" data-id="<?= $book['id']; ?>"><i class="bx bx-edit"></i></a>
-                            </div>
-                        </td>
+                        <?php if ($role == 'admin') : ?>
+                            <td>
+                                <div>
+                                    <a class="btn btn-sm  btn-outline-dark m-2 edit-book-btn" data-bs-toggle="modal" data-bs-target="#edit-book-modal" data-id="<?= $book['id']; ?>"><i class="bx bx-edit  btn-outline-dark"></i></a>
+                                    <a class="btn btn-sm  btn-outline-dark m-2 delete-book-btn" data-id="<?= $book['id']; ?>"><i class="bx bx-trash btn-outline-dark"></i> </a>
+
+                                </div>
+                            </td>
                         <?php endif; ?>
                         <td>
                             <?php if (isset($book['photo']) || !empty($book['photo'])) : ?>
-                                <img src="<?= $book['photo'] ?>" alt="user-avatar" class="d-block rounded m-3" width="80" id="uploadedAvatar">
-                            <?php else : ?>
-                                <img src="<?= asset('assets/img/avatars/1.png') ?>" alt="user-avatar" class="d-block rounded m-3" width="80" id="uploadedAvatar">
+                                <img src="<?= asset('assets/uploads/' . $book['photo']) ?>" alt="" class="d-block rounded m-3" width="80" id="uploadedAvatar">
                             <?php endif; ?>
                         </td>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?= $book['title'] ?? '' ?></strong></td>
                         <td><?= $book['author'] ?? '' ?></td>
+                        <?php if ($role == 'admin') : ?>
+                        <td><?= $book['id'] ?? '' ?></td>
+                        <?php endif; ?>
                         <td><?= $book['category'] ?? '' ?></td>
                         <td><?= $book['isbn'] ?? '' ?></td>
                         <td><?= $book['quantity'] ?? '' ?></td>
@@ -77,56 +97,61 @@ $data = $booksModel->getAll();
 
 
 </div>
-
 <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form id="create-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalCenterTitle">Add New User</h5>
+                    <h5 class="modal-title" id="modalCenterTitle">Add New Book</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="action" value="create_user">
+                    <input type="hidden" name="action" value="create_book">
                     <div class="row">
                         <div class="col mb-3">
-                            <label for="nameWithTitle" class="form-label">User Name</label>
-                            <input type="text" required id="nameWithTitle" name="user_name" class="form-control" placeholder="Enter Name" />
+                            <label for="image" class="form-label">Book Image:</label>
+                            <input type="file" required id="image" name="image" class="form-control" placeholder="Choose File" />
                         </div>
                     </div>
                     <div class="row ">
                         <div class="col mb-3">
-                            <label for="emailWithTitle" class="form-label">Email</label>
-                            <input required type="text" name="email" id="emailWithTitle" class="form-control" placeholder="xxxx@xxx.xx" />
-                        </div>
-                    </div>
-
-
-                    <div class="row gy-2">
-                        <div class="col orm-password-toggle">
-                            <label class="form-label" for="basic-default-password1">Password</label>
-                            <div class="input-group">
-                                <input type="password" required name="password" class="form-control" id="passwordInput" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="basic-default-password1" />
-                                <span id="basic-default-password1" class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                            </div>
-                        </div>
-                        <div class="col form-password-toggle">
-                            <label class="form-label" for="basic-default-password2">Confirm Password</label>
-                            <div class="input-group">
-                                <input type="password" required name="confirm_password" class="form-control" id="confirmPasswordInput" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="basic-default-password2" />
-                                <span id="basic-default-password2" class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                            </div>
+                            <label for="title" class="form-label">Book Title:</label>
+                            <input required type="text" name="title" id="title" class="form-control" placeholder="Enter Title" />
                         </div>
                     </div>
                     <div class="row ">
-                        <div class="mb-3">
-                            <label for="exampleFormControlSelect1" class="form-label">Role</label>
-                            <select class="form-select" id="permission" aria-label="Default select example" name="permission" required>
-                                <option value="operator">Operator</option>
-                                <option value="doctor">Doctor</option>
-                            </select>
+                        <div class="col mb-3">
+                            <label for="author" class="form-label">Book Author:</label>
+                            <input required type="text" name="author" id="author" class="form-control" placeholder="Enter Author Name" />
                         </div>
                     </div>
+                    <div class="row ">
+                        <div class="col mb-3">
+                            <label for="category" class="form-label">Book Category:</label>
+                            <input required type="text" name="category" id="category" class="form-control" placeholder="Enter Category" />
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col mb-3">
+                            <label for="isbn" class="form-label">Book ISBN:</label>
+                            <input required type="text" name="isbn" id="isbn" class="form-control" placeholder="Enter ISBN" />
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col mb-3">
+                            <label for="quantity" class="form-label">Book Quantity:</label>
+                            <input required type="number" name="quantity" id="quantity" class="form-control" placeholder="Enter Quantity" />
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col mb-3">
+                            <label for="html5-datetime-local-input" class="col-md-2 col-form-label">Datetime</label><br>
+                            <div class="col-md-12">
+                                <input class="form-control" type="datetime-local" value="2021-06-18T12:30:00" id="html5-datetime-local-input" name="added_at" />
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mb-3 mt-3">
                         <div id="alert-container"></div>
                     </div>
@@ -140,7 +165,7 @@ $data = $booksModel->getAll();
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         Close
                     </button>
-                    <button type="button" class="btn btn-primary" id="create">Create</button>
+                    <button type="button" class="btn btn-dark" id="create">Create</button>
                 </div>
             </form>
         </div>
@@ -148,7 +173,7 @@ $data = $booksModel->getAll();
 </div>
 
 <!-- Udpate Modal -->
-<div class="modal fade" id="edit-user-modal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="edit-book-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form id="update-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
@@ -157,56 +182,54 @@ $data = $booksModel->getAll();
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="action" value="update_user">
-                    <input type="hidden" id="user_id" name="id" value="">
+                    <input type="hidden" name="action" value="update_book">
+                    <input type="hidden" id="book_id" name="id" value="">
                     <div class="row">
                         <div class="col mb-3">
-                            <label for="nameWithTitle" class="form-label">User Name</label>
-                            <input type="text" required id="user-name" name="user_name" class="form-control" placeholder="Enter Name" />
+                            <label for="image" class="form-label">Book Image:</label>
+                            <input type="file" required id="image" name="image" class="form-control" placeholder="Choose File" />
                         </div>
                     </div>
                     <div class="row ">
                         <div class="col mb-3">
-                            <label for="emailWithTitle" class="form-label">Email</label>
-                            <input required type="text" name="email" id="email" class="form-control" placeholder="xxxx@xxx.xx" />
+                            <label for="title" class="form-label">Book Title:</label>
+                            <input required type="text" name="title" id="title" class="form-control" placeholder="Enter Title" />
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col mb-3">
+                            <label for="author" class="form-label">Book Author:</label>
+                            <input required type="text" name="author" id="author" class="form-control" placeholder="Enter Author Name" />
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col mb-3">
+                            <label for="category" class="form-label">Book Category:</label>
+                            <input required type="text" name="category" id="category" class="form-control" placeholder="Enter Category" />
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col mb-3">
+                            <label for="isbn" class="form-label">Book ISBN:</label>
+                            <input required type="text" name="isbn" id="isbn" class="form-control" placeholder="Enter ISBN" />
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col mb-3">
+                            <label for="quantity" class="form-label">Book Quantity:</label>
+                            <input required type="number" name="quantity" id="quantity" class="form-control" placeholder="Enter Quantity" />
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col mb-3">
+                            <label for="html5-datetime-local-input" class="col-md-2 col-form-label">Datetime</label><br>
+                            <div class="col-md-12">
+                                <input class="form-control" type="datetime-local" value="2021-06-18T12:30:00" id="html5-datetime-local-input" name="added_at" />
+                            </div>
                         </div>
                     </div>
 
 
-                    <div class="row gy-2">
-                        <div class="col orm-password-toggle">
-                            <label class="form-label" for="basic-default-password1">Password</label>
-                            <div class="input-group">
-                                <input type="password" required name="password" class="form-control" id="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="basic-default-password1" />
-                                <span id="basic-default-password1" class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                            </div>
-                        </div>
-                        <div class="col form-password-toggle">
-                            <label class="form-label" for="basic-default-password2">Confirm Password</label>
-                            <div class="input-group">
-                                <input type="password" required name="confirm_password" class="form-control" id="confirm-password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="basic-default-password2" />
-                                <span id="basic-default-password2" class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row ">
-                        <div class="mb-3">
-                            <label for="exampleFormControlSelect1" class="form-label">Role</label>
-                            <select class="form-select" id="edit_role" aria-label="Default select example" name="role" required>
-                                <option value="admin">Operator</option>
-                                <option value="doctor">Doctor</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row ">
-                        <div class="mb-3">
-                            <label for="exampleFormControlSelect1" class="form-label">Status</label>
-                            <select class="form-select" id="is_active" aria-label="Default select example" id="is_active" name="is_active" required>
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
                     <div class="mb-3 mt-3">
                         <div id="edit-alert-container"></div>
                     </div>
@@ -215,7 +238,7 @@ $data = $booksModel->getAll();
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         Close
                     </button>
-                    <button type="button" class="btn btn-primary" id="update-user">Update</button>
+                    <button type="button" class="btn btn-primary" id="update-book">Update</button>
                 </div>
             </form>
         </div>
@@ -225,4 +248,48 @@ $data = $booksModel->getAll();
 <?php
 require_once('../layouts/footer.php');
 ?>
-<!-- <script src="<?= asset('assets/forms-js/users.js') ?>"></script> -->
+<script src="<?= asset('assets/forms-js/book.js') ?>"></script>
+<script>
+    $(document).ready(function() {
+        $("#searchInput").on("input", function() {
+            var searchTerm = $(this).val().toLowerCase();
+
+            // Loop through each row in the table body
+            $("tbody tr").filter(function() {
+                // Toggle the visibility based on the search term
+                $(this).toggle($(this).text().toLowerCase().indexOf(searchTerm) > -1);
+            });
+        });
+
+        // Initial setup for the date picker
+        $('#datePicker').val(getFormattedDate(new Date()));
+
+        
+
+        // Function to update table rows based on the selected date
+        function filterAppointmentsByDate(selectedDate) {
+            console.log("selectedDate Date:", selectedDate); // Log each appointment date for debugging
+
+
+            // Loop through each row in the table body
+            $('tbody tr').each(function() {
+                var appointmentDate = $(this).find('.appointment_date').text().trim();
+                $(this).toggle(appointmentDate === selectedDate);
+            });
+        }
+
+        // Event handler for the "Filter" button
+        $('#clear').on('click', function() {
+            location.reload();
+        });
+
+        // Event handler for date picker change
+        $('#datePicker').on('change', function() {
+
+            var selectedDate = $(this).val();
+            alert(selectedDate);
+            filterAppointmentsByDate(selectedDate);
+        });
+
+    });
+</script>

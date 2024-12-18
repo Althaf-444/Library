@@ -3,7 +3,7 @@ require_once '../config.php';
 require_once '../helpers/AppManager.php';
 require_once '../models/Members.php';
 require_once '../models/Books.php';
-require_once '../models/Appointment.php';
+require_once '../models/Borrowed_books.php';
 require_once '../models/Payment.php';
 require_once '../models/Treatment.php';
 
@@ -32,8 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             exit;
         }
 
-      
-        // Call the model to create the member
+
+        // Call the model to create the book
         $memberModel = new Members();
         $created = $memberModel->createMembers($username, $password, $role, $email, $created_at);
 
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
-//Get user by id
+//Get member by id
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id']) && isset($_GET['action']) &&  $_GET['action'] == 'get_user') {
 
     try {
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GE
     exit;
 }
 
-//update user
+//update member
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_user') {
 
     try {
@@ -131,51 +131,208 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
-
-
-
-
-//book_appointment
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'book_appointment') {
-
+// ************************
+// create book
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_book') {
     try {
-        $appointment = new Appointment();
+        // Retrieve and validate form data
+        $title = trim($_POST['title']);
+        $author = trim($_POST['author']);
+        $category = trim($_POST['category']);
+        $isbn = trim($_POST['isbn']);
+        $quantity = intval($_POST['quantity']);
+        $added_at = date('Y-m-d H:i:s');
+        // Get file information
+        $image = $_FILES["image"] ?? null;
+        $imageFileName = null;
 
-        if (isset($_POST['id'])) {
-            $appointment = $appointment->getById($_POST['id']);
+        // Check if file is uploaded
+        if (isset($image) && !empty($image)) {
+            // Check if there are errors
+            if ($image["error"] > 0) {
+                echo json_encode(['success' => false, 'message' => "Error uploading file: " . $image["error"]]);
+                exit;
+            } else {
+                // Check if file is an image
+                if (getimagesize($image["tmp_name"]) !== false) {
+                    // Check file size (optional)
+                    if ($image["size"] < 500000) { // 500kb limit
+                        // Generate unique filename
+                        $new_filename = uniqid() . "." . pathinfo($image["name"])["extension"];
+
+                        // Move uploaded file to target directory
+                        if (move_uploaded_file($image["tmp_name"], $target_dir . $new_filename)) {
+                            $imageFileName = $new_filename;
+                        } else {
+                            echo json_encode(['success' => false, 'message' => "Error moving uploaded file."]);
+                            exit;
+                        }
+                    } else {
+                        echo json_encode(['success' => false, 'message' => "File size is too large."]);
+                        exit;
+                    }
+                } else {
+                    echo json_encode(['success' => false, 'message' => "Uploaded file is not an image."]);
+                    exit;
+                }
+            }
         }
 
-        $appointment->appointment_no = $_POST['appointment_no'] ?? '';
-        $appointment->doctor_id = $_POST['doctor_id'] ?? null;
-        $appointment->patient_name = $_POST['patient_name'] ?? null;
-        $appointment->address = $_POST['address'] ?? null;
-        $appointment->telephone = $_POST['telephone'] ?? null;
-        $appointment->email = $_POST['email'] ?? null;
-        $appointment->nic = $_POST['nic'] ?? null;
-        $appointment->treatment_id = $_POST['treatment_id'] ?? null;
-        $appointment->time_slot_from = $_POST['time_slot_from'] ?? null;
-        $appointment->time_slot_to = $_POST['time_slot_to'] ?? null;
-        $appointment->appointment_date = $_POST['appointment_date'] ?? null;
 
-        $insertedId = $appointment->save();
-        $treatment = new Treatment();
-        $appointmentTreatment = $treatment->getById($appointment->treatment_id);
+        // Call the model to create the book with the file name
+        $bookModel = new Books();
+        $created = $bookModel->createBooks($title, $author, $category, $isbn, $quantity, $added_at,  $imageFileName);
 
-        if (isset($insertedId) && isset($appointmentTreatment)) {
-
-            $payment = new Payment();
-            $payment->appointment_id = $insertedId;
-            $payment->registration_fee = $appointmentTreatment['registration_fee'] ?? 0;
-            $payment->registration_fee_paid = 1;
-            $payment->treatment_fee = $appointmentTreatment['treatment_fee'] ?? 0;
-            $payment->quantity = 1;
-            $payment->treatment_fee_paid = 0;
-            $payment->save();
-
-            // Response to send back
-            echo json_encode(['success' => true, 'message' => 'Appointment booked successfully']);
+        if ($created) {
+            echo json_encode(['success' => true, 'message' => "Book created successfully!"]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Appointment booking have an error!']);
+            echo json_encode(['success' => false, 'message' => 'Failed to create book. Book may already exist!']);
+        }
+    } catch (PDOException $e) {
+        // Handle database connection errors
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+//Get book by id
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['book_id']) && isset($_GET['action']) &&  $_GET['action'] == 'get_book') {
+
+    try {
+        $book_id = $_GET['book_id'];
+        $bookModel = new Books();
+        $book = $bookModel->getBooksById($book_id);
+        if ($book) {
+            echo json_encode(['success' => true, 'message' => "Book update successfully!", 'data' => $book]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to create user. May be user already exist!']);
+        }
+    } catch (PDOException $e) {
+        // Handle database connection errors
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+//update book
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_book') {
+
+    try {
+        $title = trim($_POST['title']);
+        $author = trim($_POST['author']);
+        $category = trim($_POST['category']);
+        $isbn = trim($_POST['isbn']);
+        $quantity = intval($_POST['quantity']);
+        $added_at = date('Y-m-d H:i:s'); // Current timestamp
+        $id = $_POST['id'];
+
+        $image = $_FILES["image"] ?? null;
+        $photo = null;
+
+        $target_dir = "../../assets/uploads/";
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0755, true);
+        }
+
+        if (isset($image) && !empty($image)) {
+            if ($image["error"] > 0) {
+                echo json_encode(['success' => false, 'message' => "Error uploading file: " . $image["error"]]);
+                exit;
+            }
+
+            if (getimagesize($image["tmp_name"]) !== false) {
+                $extension = strtolower(pathinfo($image["name"], PATHINFO_EXTENSION));
+                $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+                if (!in_array($extension, $allowed_extensions)) {
+                    echo json_encode(['success' => false, 'message' => "Invalid file type. Allowed types: " . implode(', ', $allowed_extensions)]);
+                    exit;
+                }
+
+                if ($image["size"] < 500000) {
+                    $new_filename = uniqid('', true) . '.' . $extension;
+
+                    if (move_uploaded_file($image["tmp_name"], $target_dir . $new_filename)) {
+                        $photo = $new_filename;
+                    } else {
+                        echo json_encode(['success' => false, 'message' => "Error moving uploaded file."]);
+                        exit;
+                    }
+                } else {
+                    echo json_encode(['success' => false, 'message' => "File size is too large."]);
+                    exit;
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => "Uploaded file is not an image."]);
+                exit;
+            }
+        }
+
+        // If no new photo, use the existing one (if applicable)
+        $photo = $photo ?? ($_POST['current_image'] ?? null);
+
+
+        // Validate inputs
+        if (empty($title) || empty($author) || empty($category) || empty($isbn) || empty($quantity)) {
+            echo json_encode(['success' => false, 'message' => 'Required fields are missing!']);
+            exit;
+        }
+
+
+        $bookModel = new Books();
+        $updated =  $bookModel->updateBooks($id, $title, $author, $category, $isbn, $quantity, $added_at, $photo);
+        if ($updated) {
+            echo json_encode(['success' => true, 'message' => "Book updated successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to update Book. May be Book already exist!']);
+        }
+    } catch (PDOException $e) {
+        // Handle database connection errors
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+// delete book
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['book_id']) && isset($_GET['action']) && $_GET['action'] == 'delete_book') {
+    try {
+        $book_id = $_GET['book_id'];
+
+        $bookModel = new Books();
+        
+        $bookDeleted = $bookModel->deleteBooksById($book_id);
+
+        if ($bookDeleted) {
+            echo json_encode(['success' => true, 'message' => 'Book deleted successfully!']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to delete Book.']);
+        }
+    } catch (PDOException $e) {
+        // Handle database connection errors
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+// **********************************
+// **********************************
+// add borrowed books
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_borrowed') {
+    try {
+        // Retrieve and validate form data
+        $member_id = trim($_POST['member_id']);
+        $book_id = $_POST['book_id'];
+        $book_status = $_POST['book_status'];
+        $borrowed_at = $_POST['borrowed_at'];
+        $due_date = $_POST['due_date'];
+        $returned_at = $_POST['returned_at'];
+        $fine = $_POST['fine'];
+
+    
+        // Call the model to create the book
+        $Borrowed_BooksModel = new Borrowed_Books();
+        $created = $Borrowed_BooksModel->add_borrowed_book($member_id, $book_id, $book_status, $borrowed_at, $due_date, $returned_at,$fine);
+
+        if ($created) {
+            echo json_encode(['success' => true, 'message' => "borrowed books created successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to create member. Member may already exist!']);
         }
     } catch (PDOException $e) {
         // Handle database connection errors
@@ -215,43 +372,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 //update appointment
-if (
-    $_SERVER['REQUEST_METHOD'] === 'POST'
-    && isset($_POST['action'])
-    && $_POST['action'] === 'appointment-update'
-) {
-    try {
-        $appointment_id = $_POST['appointment_id'] ?? null;
-        $patient_name = $_POST['patient_name'] ?? "";
-        $address = $_POST['address'] ?? "";
-        $telephone = $_POST['telephone'] ?? "";
-        $email = $_POST['email'] ?? "";
-        $nic = $_POST['nic'] ?? "";
+// if (
+//     $_SERVER['REQUEST_METHOD'] === 'POST'
+//     && isset($_POST['action'])
+//     && $_POST['action'] === 'appointment-update'
+// ) {
+//     try {
+//         $appointment_id = $_POST['appointment_id'] ?? null;
+//         $patient_name = $_POST['patient_name'] ?? "";
+//         $address = $_POST['address'] ?? "";
+//         $telephone = $_POST['telephone'] ?? "";
+//         $email = $_POST['email'] ?? "";
+//         $nic = $_POST['nic'] ?? "";
 
-        $appointment = new Appointment();
-        $appointmentData = $appointment->getById($appointment_id);
+//         $appointment = new Appointment();
+//         $appointmentData = $appointment->getById($appointment_id);
 
-        if (!empty($appointmentData)) {
-            $appointment->id = $appointment_id;
-            $appointment->patient_name = $patient_name;
-            $appointment->address = $address;
-            $appointment->telephone = $telephone;
-            $appointment->address = $address;
-            $appointment->email = $email;
-            $appointment->nic = $nic;
-            $appointment->save();
+//         if (!empty($appointmentData)) {
+//             $appointment->id = $appointment_id;
+//             $appointment->patient_name = $patient_name;
+//             $appointment->address = $address;
+//             $appointment->telephone = $telephone;
+//             $appointment->address = $address;
+//             $appointment->email = $email;
+//             $appointment->nic = $nic;
+//             $appointment->save();
 
 
-            // Response to send back
-            echo json_encode(['success' => true, 'message' => 'Appointment udpated successfully']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Appointment have an error!']);
-        }
-    } catch (PDOException $e) {
-        // Handle database connection errors
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-    }
-    exit;
-}
+//             // Response to send back
+//             echo json_encode(['success' => true, 'message' => 'Appointment udpated successfully']);
+//         } else {
+//             echo json_encode(['success' => false, 'message' => 'Appointment have an error!']);
+//         }
+//     } catch (PDOException $e) {
+//         // Handle database connection errors
+//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+//     }
+//     exit;
+// }
 
 dd('Access denied..!');

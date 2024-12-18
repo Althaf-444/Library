@@ -1,6 +1,5 @@
 <?php
 require_once('../layouts/header.php');
-if (!isset($userId) && empty($userId)) dd('Access Denied...!');
 ?>
 
 <!-- Content wrapper -->
@@ -13,19 +12,18 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                 <div class="d-flex align-items-end row">
                     <div class="col-sm-7">
                         <div class="card-body">
-                            <h5 class="card-title text-info">Welcome <?= $username ?> 🎉</h5>
+                            <h5 class="card-title text-dark">Welcome To E-Library 🎉</h5>
+                            <?php if ($role == 'member') : ?>
+                                <h5 class="card-title ">Your Register Name: <?= $username ?> </h5>
+                                <h5 class="card-title ">Your Register ID: <?= $userId ?> </h5>
+                            <?php endif; ?>
 
 
                         </div>
                     </div>
                     <div class="col-sm-5 text-center text-sm-left">
                         <div class="card-body pb-0 px-0 px-md-4">
-                            <img
-                                src="<?= url('assets/img/illustrations/man-with-laptop-light.png') ?>"
-                                height="140"
-                                alt="View Badge User"
-                                data-app-dark-img="illustrations/man-with-laptop-dark.png"
-                                data-app-light-img="illustrations/man-with-laptop-light.png" />
+                            <img src="<?= url('assets/img/illustrations/man-with-laptop-light.png') ?>" height="140" alt="View Badge User" data-app-dark-img="illustrations/man-with-laptop-dark.png" data-app-light-img="illustrations/man-with-laptop-light.png" />
                         </div>
                     </div>
                 </div>

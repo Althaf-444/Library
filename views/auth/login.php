@@ -29,42 +29,42 @@ require_once('../layouts/login_header.php');
                                 name="email"
                                 placeholder="Enter your email or username"
                                 autofocus
-                                style=  " border-color:#03c3ec ; box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); outline: none; " />
+                                />
                         </div>
                         <div class="mb-3 form-password-toggle">
                             <div class="d-flex justify-content-between">
                                 <label class="form-label" for="password">Password</label>
                                 <a href="auth-forgot-password-basic.html">
-                                    <small style=" color:#03c3ec">Forgot Password?</small>
+                                    <small >Forgot Password?</small>
                                 </a>
                             </div>
                             <div class="input-group input-group-merge">
                                 <input
                                     type="password"
                                     id="password"
-                                    class="form-control"
+                                    class="form-control dark"
                                     name="password"
                                     placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                                     aria-describedby="password"
-                                    style=  " border-color:#03c3ec ; box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); outline: none; " />
-                                <span class="input-group-text cursor-pointer" style=" border-color:#03c3ec"><i class="bx bx-hide"></i></span>
+                                    />
+                                <span class="input-group-text cursor-pointer dark" ><i class="bx bx-hide"></i></span>
                             </div>
                         </div>
                         <div class="mb-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="remember-me" />
-                                <label class="form-check-label" for="remember-me" style=" color:#03c3ec"> Remember Me </label>
+                                <input class="form-check-input dark" type="checkbox" id="remember-me" />
+                                <label class="form-check-label dark" for="remember-me"> Remember Me </label>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <button class="btn btn-info d-grid w-100" type="submit">Sign in</button>
+                            <button class="btn btn-dark d-grid w-100" type="submit">Sign in</button>
                         </div>
                     </form>
 
-                    <p class="text-center">
-                        <span style=" color:#03c3ec">New on our platform?</span>
+                    <p class="text-center dark">
+                        <span >New on our platform?</span>
                         <a href="register.php">
-                            <span style=" color:#03c3ec">Create an account</span>
+                            <span >Create an account</span>
                         </a>
                     </p>
                 </div>

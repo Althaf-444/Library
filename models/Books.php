@@ -74,38 +74,28 @@ class Books extends BaseModel
         $booksModel = new Books();
 
         // Retrieve the books by ID
-        $existingBooks = $booksModel->getById($id); // Assuming findById method exists
+        $existingBooks = $booksModel->getBooksById($id); // Assuming findById method exists
+        if ($existingBooks) {
+            // Handle the error (return an appropriate message or throw an exception)
+            return false; // Or throw an exception with a specific error message
+        }
+      
+        $Books = new Books();
+        $Books->id = $id;
+        $Books->title = $title;
+        $Books->author = $author;
+        $Books->category = $category;
+        $Books->isbn = $isbn;
+        $Books->quantity = $quantity;
+        $Books->added_at = $added_at;
+        $Books->photo = $photo;
+        $Books->updateRec();
 
-        if (!$existingBooks) {
-            return false; // Books not found
+        if ($Books) {
+            return true; // book udapted successfully
+        } else {
+            return false; // book update failed (likely due to database error)
         }
-
-        // Update properties only if values are provided
-        if ($title !== null) {
-            $existingBooks->title = $title;
-        }
-        if ($author !== null) {
-            $existingBooks->author = $author;
-        }
-        if ($category !== null) {
-            $existingBooks->category = $category;
-        }
-        if ($isbn !== null) {
-            $existingBooks->isbn = $isbn;
-        } if ($quantity !== null) {
-            $existingBooks->quantity = $quantity;
-        }
-        if ($added_at !== null) {
-            $existingBooks->added_at = $added_at;
-        }
-        if ($photo !== null) {
-            $existingBooks->photo = $photo;
-        }
-
-        // Save the changes
-        $updated = $existingBooks->save(); // Assuming save method exists
-
-        return $updated ? true : false;
     }
 
     function deleteBooksById($Id)

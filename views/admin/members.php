@@ -6,7 +6,6 @@ $memberModel = new Members();
 $table = $memberModel->getTableName();
 $data = $memberModel->getAll();
 
-if ($role != 'admin') dd('Access Denied...!');
 ?>
 
 <!-- Content -->
@@ -15,7 +14,7 @@ if ($role != 'admin') dd('Access Denied...!');
 
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> Members
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-info float-end" data-bs-toggle="modal" data-bs-target="#createmember">
+        <button type="button" class="btn btn-dark float-end" data-bs-toggle="modal" data-bs-target="#createmember">
             Add New Member
         </button>
     </h4>
@@ -31,6 +30,7 @@ if ($role != 'admin') dd('Access Denied...!');
                 <thead>
                     <tr>
                         <th>Member Name</th>
+                        <th>Member ID</th>
                         <th>Email</th>
                         <th>role</th>
                         <th>created_at</th>
@@ -43,6 +43,7 @@ if ($role != 'admin') dd('Access Denied...!');
                     ?>
                         <tr>
                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?= $member['username'] ?? '' ?></strong></td>
+                            <td><?= $member['id'] ?? '' ?></td>
                             <td><?= $member['email'] ?? '' ?></td>
                             <td>
                                 <span class="text-capitalize"> <?= $member['role'] ?? '' ?></span>
@@ -155,7 +156,7 @@ if ($role != 'admin') dd('Access Denied...!');
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             Close
                         </button>
-                        <button type="button" class="btn btn-info" id="create">Create</button>
+                        <button type="button" class="btn btn-dark" id="create">Create</button>
                     </div>
             </form>
         </div>
