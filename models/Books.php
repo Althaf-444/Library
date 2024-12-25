@@ -45,7 +45,7 @@ class Books extends BaseModel
             ':id' => $this->id
         );
 
-        return $this->pm->run("UPDATE books SET title = :title, author = :author, category = :category, isbn = :isbn, quantity = :quantity,added_at = :added_at,photo = :photo WHERE id = :id", $param);
+        return $this->pm->run("UPDATE books SET title = :title, author = :author, category = :category, isbn = :isbn, quantity = :quantity,added_at = :added_at WHERE id = :id", $param);
     }
 
 
@@ -68,7 +68,7 @@ class Books extends BaseModel
         }
     }
 
-    function updateBooks($id, $title, $author, $category, $isbn , $quantity,$added_at,$photo)
+    function updateBooks($id, $title, $author, $category, $isbn , $quantity , $added_at)
     {
         // Initialize the Books model
         $booksModel = new Books();
@@ -79,6 +79,9 @@ class Books extends BaseModel
             // Handle the error (return an appropriate message or throw an exception)
             return false; // Or throw an exception with a specific error message
         }
+
+        print_r($existingBooks);
+        die();
       
         $Books = new Books();
         $Books->id = $id;
@@ -88,7 +91,6 @@ class Books extends BaseModel
         $Books->isbn = $isbn;
         $Books->quantity = $quantity;
         $Books->added_at = $added_at;
-        $Books->photo = $photo;
         $Books->updateRec();
 
         if ($Books) {

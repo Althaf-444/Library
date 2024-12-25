@@ -5,7 +5,6 @@ include BASE_PATH . '/models/Books.php';
 $booksModel = new Books();
 $data = $booksModel->getAll();
 
-// if ($role != 'admin') dd('Access Denied...!');
 
 ?>
 
@@ -17,7 +16,8 @@ $data = $booksModel->getAll();
         <!-- Button trigger modal -->
         <?php if ($role == 'admin') : ?>
             <button type="button" class="btn btn-dark float-end" data-bs-toggle="modal" data-bs-target="#modalCenter">
-                Add New Books
+                <i class="bx bx-book-add "></i>
+
             </button>
         <?php endif; ?>
     </h4>
@@ -25,7 +25,7 @@ $data = $booksModel->getAll();
         <div class="col-6">
             <div class="d-flex align-items-center m-3">
                 <i class="bx bx-search  btn btn-outline-dark"></i>
-                <input type="text" id="searchInput" class="form-control border-0 shadow-none" placeholder="Search Book Name and Book ID " aria-label="Search..."  />
+                <input type="text" id="searchInput" class="form-control border-0 shadow-none" placeholder="Search Book Name  " aria-label="Search..." />
             </div>
         </div>
         <div class="col-2">
@@ -47,7 +47,7 @@ $data = $booksModel->getAll();
                     <th>Title</th>
                     <th>Author</th>
                     <?php if ($role == 'admin') : ?>
-                    <th>ID</th>
+                        <th>ID</th>
                     <?php endif; ?>
 
                     <th>Category</th>
@@ -78,7 +78,7 @@ $data = $booksModel->getAll();
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?= $book['title'] ?? '' ?></strong></td>
                         <td><?= $book['author'] ?? '' ?></td>
                         <?php if ($role == 'admin') : ?>
-                        <td><?= $book['id'] ?? '' ?></td>
+                            <td><?= $book['id'] ?? '' ?></td>
                         <?php endif; ?>
                         <td><?= $book['category'] ?? '' ?></td>
                         <td><?= $book['isbn'] ?? '' ?></td>
@@ -97,99 +97,93 @@ $data = $booksModel->getAll();
 
 
 </div>
+<!-- create books -->
 <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form id="create-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalCenterTitle">Add New Book</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="action" value="create_book">
-                    <div class="row">
+            <div class="row">
+                <form id="create-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalCenterTitle">Add New Book</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <input type="hidden" name="action" value="create_book">
+
                         <div class="col mb-3">
                             <label for="image" class="form-label">Book Image:</label>
                             <input type="file" required id="image" name="image" class="form-control" placeholder="Choose File" />
                         </div>
-                    </div>
-                    <div class="row ">
+
+
                         <div class="col mb-3">
                             <label for="title" class="form-label">Book Title:</label>
                             <input required type="text" name="title" id="title" class="form-control" placeholder="Enter Title" />
                         </div>
-                    </div>
-                    <div class="row ">
+
                         <div class="col mb-3">
                             <label for="author" class="form-label">Book Author:</label>
                             <input required type="text" name="author" id="author" class="form-control" placeholder="Enter Author Name" />
                         </div>
-                    </div>
-                    <div class="row ">
+
+
                         <div class="col mb-3">
                             <label for="category" class="form-label">Book Category:</label>
                             <input required type="text" name="category" id="category" class="form-control" placeholder="Enter Category" />
                         </div>
-                    </div>
-                    <div class="row ">
+
                         <div class="col mb-3">
                             <label for="isbn" class="form-label">Book ISBN:</label>
                             <input required type="text" name="isbn" id="isbn" class="form-control" placeholder="Enter ISBN" />
                         </div>
-                    </div>
-                    <div class="row ">
+
                         <div class="col mb-3">
                             <label for="quantity" class="form-label">Book Quantity:</label>
                             <input required type="number" name="quantity" id="quantity" class="form-control" placeholder="Enter Quantity" />
                         </div>
-                    </div>
-                    <div class="row ">
+
                         <div class="col mb-3">
                             <label for="html5-datetime-local-input" class="col-md-2 col-form-label">Datetime</label><br>
                             <div class="col-md-12">
                                 <input class="form-control" type="datetime-local" value="2021-06-18T12:30:00" id="html5-datetime-local-input" name="added_at" />
                             </div>
                         </div>
-                    </div>
 
-                    <div class="mb-3 mt-3">
-                        <div id="alert-container"></div>
-                    </div>
-                    <div class="mb-3 mt-3">
-                        <div id="additional-fields">
 
+                        <div class="mb-3 mt-3">
+                            <div id="alert-container"></div>
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <div id="additional-fields">
+
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
-                    <button type="button" class="btn btn-dark" id="create">Create</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-dark" id="create">Create</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-
-<!-- Udpate Modal -->
+<!-- Udpate books -->
 <div class="modal fade" id="edit-book-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form id="update-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalCenterTitle">Update User</h5>
+                    <h5 class="modal-title" id="modalCenterTitle">Update Book</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="action" value="update_book">
                     <input type="hidden" id="book_id" name="id" value="">
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label for="image" class="form-label">Book Image:</label>
-                            <input type="file" required id="image" name="image" class="form-control" placeholder="Choose File" />
-                        </div>
-                    </div>
                     <div class="row ">
                         <div class="col mb-3">
                             <label for="title" class="form-label">Book Title:</label>
@@ -249,6 +243,7 @@ $data = $booksModel->getAll();
 require_once('../layouts/footer.php');
 ?>
 <script src="<?= asset('assets/forms-js/book.js') ?>"></script>
+<!-- search bar script -->
 <script>
     $(document).ready(function() {
         $("#searchInput").on("input", function() {
@@ -264,7 +259,7 @@ require_once('../layouts/footer.php');
         // Initial setup for the date picker
         $('#datePicker').val(getFormattedDate(new Date()));
 
-        
+
 
         // Function to update table rows based on the selected date
         function filterAppointmentsByDate(selectedDate) {

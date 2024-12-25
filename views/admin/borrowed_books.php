@@ -3,8 +3,10 @@ require_once('../layouts/header.php');
 require_once __DIR__ . '/../../models/Borrowed_books.php';
 
 $Borrowed_BooksModel = new Borrowed_Books();
+$borrowedBooks = $Borrowed_BooksModel->updateBookStatus();
 if ($role == 'admin') {
     $borro_books = $Borrowed_BooksModel->getAllWithBookAndMember();
+    
 } else {
     $borro_books = $Borrowed_BooksModel->getAllWithBookAndMemberByUserId($userId);
 }
@@ -16,7 +18,7 @@ if ($role == 'admin') {
         <!-- Button trigger modal -->
         <?php if ($role == 'admin') : ?>
             <button type="button" class="btn btn-dark float-end" data-bs-toggle="modal" data-bs-target="#add_borrowed_books">
-                Add Borrowed books
+            <i class="bx bx-plus-medical "></i>
             </button>
         <?php endif; ?>
     </h4>
@@ -45,8 +47,10 @@ if ($role == 'admin') {
         <div class="card-body p-0 table-responsive">
             <table class="table table-striped mb-4">
                 <thead>
-                    <tr>
+                    <tr> 
+                        <?php if ($role == 'admin') : ?>
                         <th></th>
+                        <?php endif; ?>
                         <th class="text-nowrap">Member Id</th>
                         <th class="text-nowrap">Member Name</th>
                         <th class="text-nowrap">Book Id</th>
@@ -56,6 +60,7 @@ if ($role == 'admin') {
                         <th class="text-nowrap">Due Date</th>
                         <th class="text-nowrap">Returned At</th>
                         <th class="text-nowrap">Fine</th>
+                        <th class="text-nowrap">Fine Status</th>
 
                     </tr>
                 </thead>
@@ -68,9 +73,7 @@ if ($role == 'admin') {
                                 <?php if ($role == 'admin') : ?>
                                     <td>
                                         <div>
-                                            <a class="btn btn-sm btn-outline-dark m-2" href="<?= url('views/admin/edit_borrowed.php?id=' . $c['id'] ?? '') ?>"><i class="bx bx-edit btn-outline-dark"></i></a>
-                                            <a class="btn btn-sm  btn-outline-dark m-2 delete-book-btn" data-id="<?= $c['id']; ?>"><i class="bx bx-trash btn-outline-dark"></i> </a>
-
+                                        <a class="btn btn-sm btn-outline-dark m-2" href="<?= url('views/admin/edit_borrowed.php?id=' . $c['id'] ?? '') ?>"><i class="bx bx-edit btn-outline-dark"></i></a>
                                         </div>
                                     </td>
                                 <?php endif; ?>
@@ -82,7 +85,8 @@ if ($role == 'admin') {
                                 <td class="text-nowrap"> <?= $c['borrowed_at'] ?? ""; ?> </td>
                                 <td class="text-nowrap"> <?= $c['due_date'] ?? ""; ?> </td>
                                 <td class="text-nowrap"> <?= $c['returned_at'] ?? ""; ?> </td>
-                                <td class="text-nowrap"> <?= $c['fine'] ?? ""; ?> </td>
+                                <td class="text-nowrap"> <?= $c['fine'] ?? 0; ?> </td>
+                                <td class="text-nowrap"> <?= $c['fine_status'] ?? 0; ?> </td>
 
                             </tr>
                     <?php
@@ -126,21 +130,18 @@ if ($role == 'admin') {
 
                             <div class="mb-3 col-6">
                                 <label for="html5-datetime-local-input" class="form-label">Borrowed At:</label><br>
-                                <input class="form-control" type="datetime-local" name="borrowed_at"  />
+                                <input class="form-control" type="date" name="borrowed_at"  />
                             </div>
                             <div class="mb-3 col-6">
                                 <label for="html5-datetime-local-input" class="form-label">Due Date:</label><br>
-                                <input class="form-control" type="datetime-local" name="due_date"  />
+                                <input class="form-control" type="date" name="due_date"  />
                             </div>
 
                             <div class="mb-3 col-6">
                                 <label for="html5-datetime-local-input" class="form-label">Returned At:</label><br>
-                                <input class="form-control" type="datetime-local" name="returned_at" />
+                                <input class="form-control" type="date" name="returned_at" />
                             </div>
-                            <div class="mb-3 col-6">
-                                <label for="fine" class="form-label">Fine:</label>
-                                <input type="number" class="form-control" name="fine" value="00.00" required>
-                            </div>
+                            
                             <div class="mb-3 mt-3">
                                 <div id="additional-fields">
                                 </div>
@@ -161,6 +162,11 @@ if ($role == 'admin') {
         </div>
     </div>
 </div>
+
+
+
+<!-- fine paid pending -->
+
 
 <?php require_once('../layouts/footer.php'); ?>
 <script src="<?= asset('assets/forms-js/borrowed.js') ?>"></script>

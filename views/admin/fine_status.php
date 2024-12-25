@@ -16,7 +16,7 @@ $Borrowed_Books = $Borrowed_BooksModel->getById($id);
         </div>
         <div class="col-4">
             <div class="form-group d-flex justify-content-end ">
-                <a href="<?= url('views/admin/borrowed_books.php') ?>" class="btn btn-dark active" id="courier_service_modal_btn">
+                <a href="<?= url('views/admin/fine.php') ?>" class="btn btn-dark active" id="courier_service_modal_btn">
                     Back
                 </a>
             </div>
@@ -27,47 +27,30 @@ $Borrowed_Books = $Borrowed_BooksModel->getById($id);
 
         <!-- /.card-header -->
         <div class="container">
-            <form id="Borrowed_Books-form" action="<?= url('services/ajax_functions.php') ?>">
+            <form id="fine_status_form" action="<?= url('services/ajax_functions.php') ?>">
                 <div class="row">
                     <div class="col-12">
                         <div id="alert-container"></div>
                     </div>
                     <input type="hidden" name="id" value="<?= $Borrowed_Books['id']; ?>">
                     <input type="hidden" name="action" value="Borrowed_Books_update">
-
-                    <div class="mb-3 col-6">
-                        <label for="user_id" class="form-label">Member Id:</label>
-                        <input type="text" class="form-control"  value="<?= $Borrowed_Books ['user_id']; ?>"  name="user_id" readonly >
-                    </div>
-
-                    <div class="mb-3 col-6">
-                        <label for="book_id" class="form-label">Book Id:</label>
-                        <input type="text" class="form-control"   value="<?= $Borrowed_Books['book_id']; ?>"  name="book_id" readonly>
-                    </div>
                     <div class=" mb-3 col-6">
-                                <label for="book_status" class="form-label">Book Status:</label>
-                                <input type="text" class="form-control"   value="<?= $Borrowed_Books['book_status']; ?>"  name="book_status" readonly>
+                                <label for="fine" class="form-label">fine</label>
+                                <input type="text" class="form-control"   value="<?= $Borrowed_Books['fine']; ?>"  name="book_status" readonly>
 
                             </div>
-                    
-
-                    <div class="mb-3 col-6">
-                        <label for="borrowed_at" class="form-label">Borrowed At:</label>
-                        <input type="date" class="form-control"   value="<?= $Borrowed_Books['borrowed_at'] ?? ""; ?>"  name="borrowed_at" readonly >
-                    </div>
-
-                    <div class="mb-3 col-6">
-                        <label for="due_date" class="form-label">Due Date:</label>
-                        <input type="date" class="form-control"  value="<?= $Borrowed_Books['due_date']; ?>"  name="due_date" readonly>
-                    </div>
-
-
-                    <div class="mb-3 col-6">
-                        <label for="returned_at" class="form-label">Returned At:</label>
-                        <input type="date" class="form-control"  name='returned_at' value="<?= $Borrowed_Books['returned_at']; ?>" >
-                    </div>
+           
+                            <div class=" mb-3 col-6">
+                                <label for="fine_status" class="form-label">Fine Status:</label>
+                                <select class="form-select" id="fine_status" aria-label="Default select example" name="fine_status" value="<?= $Borrowed_Books['fine_status']; ?>"  required>
+                                    <option value="" class=" text-info "></option>
+                                    <option value="no_fine" class=" text-info ">No Fine</option>
+                                    <option value="paid" class=" text-success ">Paid</option>
+                                    <option value="pending" class=" text-danger ">Pending</option>
+                                </select>
+                            </div> 
                     <div class="mt-4 col-6 text-end">
-                        <button type="button" class="btn rounded-pill btn-success" id="update-Borrowed_Books">Update</button>
+                        <button type="button" class="btn rounded-pill btn-success" id="update_fine_status">Update</button>
                     </div>
 
 
@@ -84,19 +67,19 @@ $Borrowed_Books = $Borrowed_BooksModel->getById($id);
 <script>
     $(document).ready(function() {
         // Handle modal button click
-        $('#update-Borrowed_Books').on('click', function(e) {
+        $('#update_fine_status').on('click', function(e) {
             e.preventDefault();
 
             // Get the form element
-            var form = $('#Borrowed_Books-form')[0];
-            $('#Borrowed_Books-form')[0].reportValidity();
+            var form = $('#fine_status_form')[0];
+            $('#fine_status_form')[0].reportValidity();
 
             // Check form validity
             if (form.checkValidity()) {
 
                 // Serialize the form data
-                var formData = $('#Borrowed_Books-form').serialize();
-                var formAction = $('#Borrowed_Books-form').attr('action');
+                var formData = $('#fine_status_form').serialize();
+                var formAction = $('#fine_status_form').attr('action');
 
                 // Perform AJAX request
                 $.ajax({

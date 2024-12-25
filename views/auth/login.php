@@ -61,12 +61,7 @@ require_once('../layouts/login_header.php');
                         </div>
                     </form>
 
-                    <p class="text-center dark">
-                        <span >New on our platform?</span>
-                        <a href="register.php">
-                            <span >Create an account</span>
-                        </a>
-                    </p>
+                    
                 </div>
             </div>
             <!-- /Register -->
