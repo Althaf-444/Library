@@ -13,6 +13,7 @@ class Borrowed_Books extends BaseModel
     public $returned_at;
     public $fine;
     public $fine_status;
+    public $paid_date;
 
 
     protected function getTableName()
@@ -62,6 +63,7 @@ class Borrowed_Books extends BaseModel
         $params = array(
             ':returned_at' => $this->returned_at,
             ':fine_status' => $this->fine_status,
+            ':paid_date' => $this->paid_date,
             ':id' => $this->id
         );
 
@@ -69,7 +71,8 @@ class Borrowed_Books extends BaseModel
             "UPDATE borrowedbooks
             SET 
             returned_at = :returned_at,
-            fine_status = :fine_status
+            fine_status = :fine_status,
+            paid_date = :paid_date
             WHERE id = :id",
             $params
         );
@@ -229,9 +232,26 @@ class Borrowed_Books extends BaseModel
     // move user id & user name & fine & fine status fine section
     public function finetotal()
     {
-        return $this->pm->run("SELECT user_id ,fine, fine_status, bb.id, m.username as member_name
+        return $this->pm->run("SELECT user_id ,fine, fine_status, bb.id, paid_date , m.username as member_name
         FROM borrowedbooks as bb JOIN members as m ON bb.user_id = m.id WHERE fine > 0
-        ORDER by bb.id DESC;");
+       ;");
     }
+   //paid fine
+    public function paidfine()
+    {
+        return $this->pm->run("SELECT user_id ,fine, fine_status, paid_date , m.username as member_name
+        FROM borrowedbooks as bb JOIN members as m ON bb.user_id = m.id WHERE fine > 0 and fine_status = 'paid'
+       ;");
+    }
+   //    pending fine
+   public function pendingfine()
+   {
+       return $this->pm->run("SELECT user_id ,fine, fine_status, paid_date , m.username as member_name
+       FROM borrowedbooks as bb JOIN members as m ON bb.user_id = m.id WHERE fine > 0 and fine_status = 'pending'
+      ;");
+   }
+
 
 }
+
+

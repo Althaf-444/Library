@@ -29,8 +29,7 @@ class PersistanceManager
             `email` VARCHAR(200) NOT NULL UNIQUE,
             `password` VARCHAR(240) NOT NULL,
             `role` ENUM('admin', 'member') NOT NULL DEFAULT 'member',
-            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
         $this->pdo->exec($query_users);
 
@@ -42,8 +41,8 @@ class PersistanceManager
             `category` VARCHAR(100) NOT NULL,
             `isbn` VARCHAR(20) UNIQUE NOT NULL,
             `quantity` INT NOT NULL DEFAULT 0,
-            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            `added_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            `photo`VARCHAR(255) NOT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
         $this->pdo->exec($query_books);
 
@@ -57,17 +56,14 @@ class PersistanceManager
             `due_date` DATE NOT NULL,
             `returned_at` TIMESTAMP NULL,
             `fine` DECIMAL(10, 2) DEFAULT 0.00,
+            `fine_status`  ENUM('paid', 'pending', 'no fine') NOT NULL,
+            `paid_date` DATE NOT NULL,
             FOREIGN KEY (`user_id`) REFERENCES `members`(`id`) ON DELETE CASCADE,
             FOREIGN KEY (`book_id`) REFERENCES `books`(`id`) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
         $this->pdo->exec($query_borrowed_books);
 
-        // Categories table (optional)
-        $query_categories = "CREATE TABLE IF NOT EXISTS `categories` (
-            `id` INT AUTO_INCREMENT PRIMARY KEY,
-            `name` VARCHAR(100) UNIQUE NOT NULL
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
-        $this->pdo->exec($query_categories);
+       
     }
 
     // Run a query and fetch results

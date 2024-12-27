@@ -41,7 +41,6 @@ class Books extends BaseModel
             ':isbn' => $this->isbn,
             ':quantity' => $this->quantity,
             ':added_at' => $this->added_at,
-            ':photo' => $this->photo,
             ':id' => $this->id
         );
 
@@ -75,14 +74,11 @@ class Books extends BaseModel
 
         // Retrieve the books by ID
         $existingBooks = $booksModel->getBooksById($id); // Assuming findById method exists
-        if ($existingBooks) {
+        if (!$existingBooks) {
             // Handle the error (return an appropriate message or throw an exception)
             return false; // Or throw an exception with a specific error message
         }
 
-        print_r($existingBooks);
-        die();
-      
         $Books = new Books();
         $Books->id = $id;
         $Books->title = $title;

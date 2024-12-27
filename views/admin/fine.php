@@ -25,6 +25,7 @@ $finetable = $Borrowed_BooksModel->finetotal();
                     <th class="text-nowrap">Member Name</th>
                     <th class="text-nowrap">Fine</th>
                     <th class="text-nowrap">Fine Status</th>
+                    <th class="text-nowrap">Paid Date</th>
 
                 </tr>
             </thead>
@@ -45,6 +46,7 @@ $finetable = $Borrowed_BooksModel->finetotal();
                             <td class="text-nowrap"> <?= $ft['member_name'] ?? ""; ?> </td>
                             <td class="text-nowrap"> <?= $ft['fine'] ?? ""; ?> </td>
                             <td class="text-nowrap"> <?= $ft['fine_status'] ?? ""; ?> </td>
+                            <td class="text-nowrap"> <?= $ft['paid_date'] ?? ""; ?> </td>
 
                         </tr>
                 <?php

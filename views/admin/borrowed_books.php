@@ -6,7 +6,6 @@ $Borrowed_BooksModel = new Borrowed_Books();
 $borrowedBooks = $Borrowed_BooksModel->updateBookStatus();
 if ($role == 'admin') {
     $borro_books = $Borrowed_BooksModel->getAllWithBookAndMember();
-    
 } else {
     $borro_books = $Borrowed_BooksModel->getAllWithBookAndMemberByUserId($userId);
 }
@@ -18,7 +17,7 @@ if ($role == 'admin') {
         <!-- Button trigger modal -->
         <?php if ($role == 'admin') : ?>
             <button type="button" class="btn btn-dark float-end" data-bs-toggle="modal" data-bs-target="#add_borrowed_books">
-            <i class="bx bx-plus-medical "></i>
+                <i class="bx bx-plus-medical "></i>
             </button>
         <?php endif; ?>
     </h4>
@@ -47,9 +46,9 @@ if ($role == 'admin') {
         <div class="card-body p-0 table-responsive">
             <table class="table table-striped mb-4">
                 <thead>
-                    <tr> 
+                    <tr>
                         <?php if ($role == 'admin') : ?>
-                        <th></th>
+                            <th></th>
                         <?php endif; ?>
                         <th class="text-nowrap">Member Id</th>
                         <th class="text-nowrap">Member Name</th>
@@ -61,6 +60,7 @@ if ($role == 'admin') {
                         <th class="text-nowrap">Returned At</th>
                         <th class="text-nowrap">Fine</th>
                         <th class="text-nowrap">Fine Status</th>
+                        <th class="text-nowrap">Paid Date</th>
 
                     </tr>
                 </thead>
@@ -73,7 +73,7 @@ if ($role == 'admin') {
                                 <?php if ($role == 'admin') : ?>
                                     <td>
                                         <div>
-                                        <a class="btn btn-sm btn-outline-dark m-2" href="<?= url('views/admin/edit_borrowed.php?id=' . $c['id'] ?? '') ?>"><i class="bx bx-edit btn-outline-dark"></i></a>
+                                            <a class="btn btn-sm btn-outline-dark m-2" href="<?= url('views/admin/edit_borrowed.php?id=' . $c['id'] ?? '') ?>"><i class="bx bx-edit btn-outline-dark"></i></a>
                                         </div>
                                     </td>
                                 <?php endif; ?>
@@ -86,7 +86,8 @@ if ($role == 'admin') {
                                 <td class="text-nowrap"> <?= $c['due_date'] ?? ""; ?> </td>
                                 <td class="text-nowrap"> <?= $c['returned_at'] ?? ""; ?> </td>
                                 <td class="text-nowrap"> <?= $c['fine'] ?? 0; ?> </td>
-                                <td class="text-nowrap"> <?= $c['fine_status'] ?? 0; ?> </td>
+                                <td class="text-nowrap"> <?= $c['fine_status'] ?? ''; ?> </td>
+                                <td class="text-nowrap"> <?= $c['paid_date'] ?? ''; ?> </td>
 
                             </tr>
                     <?php
@@ -98,75 +99,72 @@ if ($role == 'admin') {
         </div>
         <!-- /.card-body -->
     </div>
-    <div class="modal fade" id="add_borrowed_books" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <form id="create-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalCenterTitle">Add Borrowed Book</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+</div>
+<!-- add borrowed books -->
+<div class="modal fade" id="add_borrowed_books" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="create-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCenterTitle">Add Borrowed Book</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="add_borrowed">
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="member_id" class="form-label">Member Id:</label>
+                            <input type="number" required id="member_id" name="member_id" class="form-control" placeholder="Enter Member ID" />
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <label for="book_id" class="form-label">Book Id:</label>
+                            <input required type="number" name="book_id" id="book_id" class="form-control" placeholder="Enter Book ID" />
+                        </div>
+
+                        <div class=" mb-3 col-6">
+                            <label for="book_status" class="form-label">Book Status:</label>
+                            <select class="form-select" id="book_status" aria-label="Default select example" name="book_status" required>
+                                <option value="borrowed" class=" text-info ">Borrowed</option>
+                                <option value="returned" class=" text-success ">Returned</option>
+                                <option value="due_time_over" class=" text-danger ">Due Time Over</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <label for="html5-datetime-local-input" class="form-label">Borrowed At:</label><br>
+                            <input class="form-control" type="date" name="borrowed_at" />
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="html5-datetime-local-input" class="form-label">Due Date:</label><br>
+                            <input class="form-control" type="date" name="due_date" />
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <label for="html5-datetime-local-input" class="form-label">Returned At:</label><br>
+                            <input class="form-control" type="date" name="returned_at" />
+                        </div>
+
+                        <div class="mb-3 mt-3">
+                            <div id="additional-fields">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 mt-3">
+                            <div id="alert-container"></div>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="action" value="add_borrowed">
-                        <div class="row">
-                            <div class="mb-3 col-6">
-                                <label for="member_id" class="form-label">Member Id:</label>
-                                <input type="number" required id="member_id" name="member_id" class="form-control" placeholder="Enter Member ID" />
-                            </div>
-
-                            <div class="mb-3 col-6">
-                                <label for="book_id" class="form-label">Book Id:</label>
-                                <input required type="number" name="book_id" id="book_id" class="form-control" placeholder="Enter Book ID" />
-                            </div>
-
-                            <div class=" mb-3 col-6">
-                                <label for="book_status" class="form-label">Book Status:</label>
-                                <select class="form-select" id="book_status" aria-label="Default select example" name="book_status" required>
-                                    <option value="borrowed" class=" text-info ">Borrowed</option>
-                                    <option value="returned" class=" text-success ">Returned</option>
-                                    <option value="due_time_over" class=" text-danger ">Due Time Over</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-3 col-6">
-                                <label for="html5-datetime-local-input" class="form-label">Borrowed At:</label><br>
-                                <input class="form-control" type="date" name="borrowed_at"  />
-                            </div>
-                            <div class="mb-3 col-6">
-                                <label for="html5-datetime-local-input" class="form-label">Due Date:</label><br>
-                                <input class="form-control" type="date" name="due_date"  />
-                            </div>
-
-                            <div class="mb-3 col-6">
-                                <label for="html5-datetime-local-input" class="form-label">Returned At:</label><br>
-                                <input class="form-control" type="date" name="returned_at" />
-                            </div>
-                            
-                            <div class="mb-3 mt-3">
-                                <div id="additional-fields">
-                                </div>
-                            </div>
-
-                            <div class="mb-3 mt-3">
-                                <div id="alert-container"></div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                Close
-                            </button>
-                            <button type="button" class="btn btn-dark" id="create">Create</button>
-                        </div>
-                </form>
-            </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-dark" id="create">Create</button>
+                    </div>
+            </form>
         </div>
     </div>
 </div>
-
-
-
-<!-- fine paid pending -->
-
 
 <?php require_once('../layouts/footer.php'); ?>
 <script src="<?= asset('assets/forms-js/borrowed.js') ?>"></script>

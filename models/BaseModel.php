@@ -29,7 +29,7 @@ abstract class BaseModel
     // Method to retrieve all records from the associated table
     public function getAll()
     {
-        return $this->pm->run("SELECT * FROM " . $this->getTableName());
+        return $this->pm->run("SELECT * FROM " . $this->getTableName())  ;
     }
 
     // Method to retrieve all active records from the associated table

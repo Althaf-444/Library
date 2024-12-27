@@ -4,7 +4,6 @@ require_once '../helpers/AppManager.php';
 require_once '../models/Members.php';
 require_once '../models/Books.php';
 require_once '../models/Borrowed_books.php';
-require_once '../models/Payment.php';
 
 
 
@@ -139,6 +138,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $image = $_FILES["image"] ?? null;
         $imageFileName = null;
 
+
+      
+        // Define target directory
+        $target_dir = "../assets/uploads/";
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0777, true); // Create directory if it doesn't exist
+        }
+   
         // Check if file is uploaded
         if (isset($image) && !empty($image)) {
             // Check if there are errors
@@ -217,7 +224,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $added_at = date('Y-m-d H:i:s'); // Current timestamp
         $id = $_POST['id'];
 
-       
 
         // Validate inputs
         if (empty($title) || empty($author) || empty($category) || empty($isbn) || empty($quantity)) {
@@ -301,6 +307,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $id = $_POST['id'] ?? "";
         $returned_at = $_POST['returned_at'] ?? date('Y-m-d H:i:s'); // Default to now if not provided
         $fine_status = $_POST['fine_status'] ?? "";
+        $paid_date = $_POST['paid_date'] ?? "";
+
         $Borrowed_BooksModel = new Borrowed_Books();
 
         // Fetch the borrowed book data
@@ -310,6 +318,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $Borrowed_BooksModel->id = $id;
             $Borrowed_BooksModel->returned_at = $returned_at;
             $Borrowed_BooksModel->fine_status = $fine_status;
+            $Borrowed_BooksModel->paid_date = $paid_date;
             $Borrowed_BooksModel->save();
 
             // Handle the return logic (e.g., updating book quantity and status)
@@ -331,31 +340,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 // **********************************
 // **********************************
-// update payment status
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_payment') {
-    try {
-        // Retrieve and validate form data
-        $user_id = ($_POST['user_id']);
-        $fine_status = ($_POST['fine_status']);
-        $updated_at = ($_POST['updated_at']);
-
-
-        // Call the model to create the book with the file name
-        $paymentmodal = new Payment();
-        $created = $paymentmodal->updatefine_status( $user_id,  $fine_status, $updated_at );
-        $paymentmodal->markFineAsPaid($user_id);
-
-        if ($created) {
-            echo json_encode(['success' => true, 'message' => "payment status edit successfully!"]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to payment status edit']);
-        }
-    } catch (PDOException $e) {
-        // Handle database connection errors
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-    }
-    exit;
-}
 
 
 dd('Access denied..!');

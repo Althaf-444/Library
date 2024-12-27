@@ -49,6 +49,10 @@ $Borrowed_Books = $Borrowed_BooksModel->getById($id);
                                     <option value="pending" class=" text-danger ">Pending</option>
                                 </select>
                             </div> 
+                            <div class="mb-3 col-6">
+                        <label for="paid_date" class="form-label">Paid Date:</label>
+                        <input type="date" class="form-control"   name="paid_date"  >
+                    </div>
                     <div class="mt-4 col-6 text-end">
                         <button type="button" class="btn rounded-pill btn-success" id="update_fine_status">Update</button>
                     </div>
