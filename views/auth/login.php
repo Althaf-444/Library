@@ -12,11 +12,11 @@ require_once('../layouts/login_header.php');
                     <!-- Logo -->
                     <div class="app-brand justify-content-center">
                         <a href="index.html" class="app-brand-link gap-2">
-                            <span class="app-brand-text demo text-body fw-bolder">E-library</span>
+                            <span class="app-brand-text demo text-body fw-bolder">library</span>
                         </a>
                     </div>
                     <!-- /Logo -->
-                    <h4 class="mb-2">Welcome to E-library! 👋</h4>
+                    <h4 class="mb-2">Welcome to library! 👋</h4>
                     <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
                     <form id="formAuthentication" class="mb-3" action="<?= url('services/auth.php') ?>" method="POST">

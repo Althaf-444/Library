@@ -4,6 +4,9 @@ require_once __DIR__ . '/../../models/Borrowed_books.php';
 
 $Borrowed_BooksModel = new Borrowed_Books();
 $borrowedBooks = $Borrowed_BooksModel->updateBookStatus();
+$member_dropdown = $Borrowed_BooksModel->member_dropdown();
+$book_dropdown = $Borrowed_BooksModel->book_dropdown();
+
 if ($role == 'admin') {
     $borro_books = $Borrowed_BooksModel->getAllWithBookAndMember();
 } else {
@@ -113,22 +116,44 @@ if ($role == 'admin') {
                 <div class="modal-body">
                     <input type="hidden" name="action" value="add_borrowed">
                     <div class="row">
-                        <div class="mb-3 col-6">
+                     
+
+                        <div class=" mb-3 col-12">
                             <label for="member_id" class="form-label">Member Id:</label>
-                            <input type="number" required id="member_id" name="member_id" class="form-control" placeholder="Enter Member ID" />
+                            <select class="form-select" id="member_id" aria-label="Default select example" name="member_id" required>
+                            <option class=" text-dark "> </option>
+                            <?php
+                    if (isset($member_dropdown)) {
+                        foreach ($member_dropdown as $m) {
+                    ?>
+                            <option value="<?= $m['id'] ?? ""; ?>" class=" text-dark ">ID: <?= $m['id'] ?? '' ;?> ||   Name--><?= $m['username'] ?? ''?>  </option>
+                            <?php
+                        }
+                    }
+                    ?>           
+                            </select>
                         </div>
-
-                        <div class="mb-3 col-6">
+                        <div class=" mb-3 col-12">
                             <label for="book_id" class="form-label">Book Id:</label>
-                            <input required type="number" name="book_id" id="book_id" class="form-control" placeholder="Enter Book ID" />
+                            <select class="form-select" id="book_id" aria-label="Default select example" name="book_id" required>
+                            <option class=" text-dark "> </option>
+                            <?php
+                    if (isset($book_dropdown)) {
+                        foreach ($book_dropdown as $b) {
+                    ?>
+                            <option value="<?= $b['id'] ?? ""; ?>" class=" text-dark ">ID: <?= $b['id'] ?? '' ;?> ||  Title--><?= $b['title'] ?? ''?>  </option>
+                            <?php
+                        }
+                    }
+                    ?>           
+                            </select>
                         </div>
-
                         <div class=" mb-3 col-6">
                             <label for="book_status" class="form-label">Book Status:</label>
                             <select class="form-select" id="book_status" aria-label="Default select example" name="book_status" required>
-                                <option value="borrowed" class=" text-info ">Borrowed</option>
-                                <option value="returned" class=" text-success ">Returned</option>
-                                <option value="due_time_over" class=" text-danger ">Due Time Over</option>
+                                <option value="borrowed" class=" text-dark ">Borrowed</option>
+                                <option value="returned" class=" text-dark ">Returned</option>
+                                <option value="due_time_over" class=" text-dark ">Due Time Over</option>
                             </select>
                         </div>
 

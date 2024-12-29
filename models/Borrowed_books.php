@@ -250,8 +250,20 @@ class Borrowed_Books extends BaseModel
        FROM borrowedbooks as bb JOIN members as m ON bb.user_id = m.id WHERE fine > 0 and fine_status = 'pending'
       ;");
    }
-
-
+// member dropdown
+ public function  member_dropdown()
+ {
+     return $this->pm->run("SELECT id ,username 
+     FROM members 
+    ;");
+ }
+ // book dropdown
+ public function  book_dropdown()
+ {
+     return $this->pm->run("SELECT id ,title
+     FROM books 
+    ;");
+ }
 }
 
 

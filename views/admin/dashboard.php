@@ -12,7 +12,7 @@ require_once('../layouts/header.php');
                 <div class="d-flex align-items-end row">
                     <div class="col-sm-7">
                         <div class="card-body">
-                            <h5 class="card-title text-dark">Welcome To E-Library 🎉 <?= $username ?></h5>
+                            <h5 class="card-title text-dark">Welcome To Library 🎉 <?= $username ?></h5>
                             <?php if ($role == 'member') : ?>
                                 <h5 class="card-title ">Your Register Name: <?= $username ?> </h5>
                                 <h5 class="card-title ">Your Register ID: <?= $userId ?> </h5>

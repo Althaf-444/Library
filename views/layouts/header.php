@@ -30,7 +30,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
         name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>E-Library</title>
+    <title>Library</title>
 
     <meta name="description" content="" />
     <meta name="domain" content="<?= current_domain() ?>" />
@@ -79,7 +79,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                         <span class="app-brand-logo demo">
 
                         </span>
-                        <span class="app-brand-text demo menu-text fw-bolder ms-2 text-capitalize text-dark">E-Library</span>
+                        <span class="app-brand-text demo menu-text fw-bolder ms-2 text-capitalize text-dark">Library</span>
                     </a>
 
                     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
